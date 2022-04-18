@@ -8,12 +8,14 @@
     :copyright: © 2018 by Social Point Labs.
     :license: MIT, see LICENSE for more details.
 """
-
+import logging
 
 from sheetfu.service import SheetsService, DriveService
 from sheetfu.model import Spreadsheet
 import time
 
+
+logger = logging.getLogger(__name__)
 
 class SpreadsheetApp:
 
@@ -52,9 +54,11 @@ class SpreadsheetApp:
 
 
     def init_services(self, http=None):
+        logger.debug('Rebulding sheet_service')
         self.sheet_service = self.sheet_service_base.build(http=http)
         if not http:        # if not mock
             self.drive_service_base.build()
+        logger.debug('Rebuilding finished')
 
 
     def create(self, name, editor=None):
