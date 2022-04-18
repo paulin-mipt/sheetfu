@@ -49,14 +49,14 @@ class SpreadsheetApp:
         if not http:        # if not mock
             self.drive_service_base = DriveService(
                 path_to_secret=self.path_to_secret, from_env=self.from_env)
-        self.init_services(http)
+        self.init_services(http, skip_drive=False)
         self.batches = list()
 
 
-    def init_services(self, http=None):
+    def init_services(self, http=None, skip_drive=True):
         logger.debug('Rebulding sheet_service')
         self.sheet_service = self.sheet_service_base.build(http=http)
-        if not http:        # if not mock
+        if not skip_drive:
             self.drive_service_base.build()
         logger.debug('Rebuilding finished')
 
