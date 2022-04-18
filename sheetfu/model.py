@@ -58,6 +58,7 @@ class Spreadsheet:
         Requests every sheets associated to spreadsheets
         :return List of sheets object
         """
+        self.client.init_services()
         request = self.client.sheet_service.spreadsheets().get(
             spreadsheetId=self.id, includeGridData=False
         )
@@ -135,6 +136,7 @@ class Spreadsheet:
             }
             body["requests"].append(add_sheet_request)
 
+        self.client.init_services()
         response = self.client.sheet_service.spreadsheets().batchUpdate(
             spreadsheetId=self.id,
             body=body
@@ -166,6 +168,7 @@ class Spreadsheet:
         }
         body["requests"].append(duplicate_sheet_request)
 
+        self.client.init_services()
         response = self.client.sheet_service.spreadsheets().batchUpdate(
             spreadsheetId=self.id,
             body=body
@@ -178,6 +181,7 @@ class Spreadsheet:
             # Sending a batch update with an empty list of requests
             # would return an error
             return
+        self.client.init_services()
         body = {'requests': [self.batches]}
         response = self.client.sheet_service.spreadsheets().batchUpdate(
             spreadsheetId=self.id,
@@ -411,6 +415,7 @@ class Range:
         """
         target_range = self.a1 or self.sheet.name
         # first we request data to the API
+        self.client.init_services()
         request = self.client.sheet_service.spreadsheets().get(
             spreadsheetId=self.sheet.spreadsheet.id,
             includeGridData=True,
@@ -464,6 +469,7 @@ class Range:
         }
 
         if batch_to is None:
+            self.client.init_services()
             body = {'requests': [request]}
             return self.client.sheet_service.spreadsheets().batchUpdate(
                 spreadsheetId=self.sheet.spreadsheet.id,
@@ -633,6 +639,7 @@ class Range:
         if a1 is not None:
             return a1
 
+        self.client.init_services()
         request = self.client.sheet_service.spreadsheets().values().get(
             spreadsheetId=self.sheet.spreadsheet.id,
             range=self.sheet.name
@@ -688,6 +695,7 @@ class Range:
             }
         }
         if batch_to is None:
+            self.client.init_services()
             body = {'requests': [request]}
             return self.client.sheet_service.spreadsheets().batchUpdate(
                 spreadsheetId=self.sheet.spreadsheet.id,

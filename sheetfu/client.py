@@ -38,13 +38,24 @@ class SpreadsheetApp:
             editor/reader accesses to users).
 
         """
-        self.sheet_service = SheetsService(
-            path_to_secret=path_to_secret, from_env=from_env).build(http=http)
+        self.path_to_secret = path_to_secret
+        self.from_env = from_env
+        self.sheet_service_base = SheetsService(
+            path_to_secret=self.path_to_secret,
+            from_env=self.from_env
+        )
         if not http:        # if not mock
-            self.drive_service = DriveService(
-                path_to_secret=path_to_secret, from_env=from_env).build()
-
+            self.drive_service_base = DriveService(
+                path_to_secret=self.path_to_secret, from_env=self.from_env)
+        self.init_services(http)
         self.batches = list()
+
+
+    def init_services(self, http=None):
+        self.sheet_service = self.sheet_service_base.build(http=http)
+        if not http:        # if not mock
+            self.drive_service_base.build()
+
 
     def create(self, name, editor=None):
         """
@@ -56,6 +67,7 @@ class SpreadsheetApp:
         the sheet will remain invisible).
         :return: Spreadsheet Json Resource.
         """
+        self.init_services()
         spreadsheet_body = {"properties": {"title": name}}
         request = self.sheet_service.spreadsheets().create(body=spreadsheet_body)
         response = request.execute()
@@ -75,6 +87,7 @@ class SpreadsheetApp:
         :param default_owner: User email address to give ownership of the file.
         :return:
         """
+        self.init_services()
         user_permission = {
             'type': 'user',
             'role': 'writer',
@@ -94,6 +107,7 @@ class SpreadsheetApp:
         :param spreadsheet_id.
         :return: Spreadsheet instance.
         """
+        self.init_services()
         return Spreadsheet(client=self, spreadsheet_id=spreadsheet_id)
 
     def open_by_url(self, url):
@@ -104,5 +118,5 @@ class SpreadsheetApp:
         """
         url = url.replace("https://docs.google.com/spreadsheets/d/", "")
         spreadsheet_id = url[0: url.index('/')]
+        self.init_services()
         return Spreadsheet(client=self, spreadsheet_id=spreadsheet_id)
-

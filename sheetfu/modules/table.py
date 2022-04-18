@@ -252,6 +252,7 @@ class Table:
             # an error
             return
         body = {'requests': [self.batches]}
+        self.full_range.client.init_services()
         response = self.full_range.client.sheet_service.spreadsheets().batchUpdate(
             spreadsheetId=self.full_range.sheet.spreadsheet.id,
             body=body
@@ -260,7 +261,7 @@ class Table:
         return response
 
     def select(self, criteria):
-
+        self.full_range.client.init_services()
         return TableSelector(self.items, criteria).execute()
 
 
