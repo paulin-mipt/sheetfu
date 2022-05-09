@@ -10,7 +10,7 @@ def mock_google_sheets_responses(fixture_files=None):
     :param fixture_files: Fixture file name (must be located in the fixture folder).
     :return: An HttpMockSequence object.
     """
-    mocks = [({'status': '200'}, open_fixture('discovery.json'))]
+    mocks = []
 
     # If input is a string, transform it into list of one item
     if isinstance(fixture_files, str):

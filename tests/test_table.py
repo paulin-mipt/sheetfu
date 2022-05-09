@@ -38,12 +38,21 @@ class TestTableRanges:
 
 class TestItem:
     http_mocks = mock_google_sheets_responses([
+        'discovery.json',
+        'discovery.json',
+        'discovery.json',
         'table_get_sheets.json',
+        'discovery.json',
         'table_check_data_range.json',
+        'discovery.json',
         'table_values.json',
+        'discovery.json',
         'table_values.json',
+        'discovery.json',
         'table_notes.json',
+        'discovery.json',
         'table_backgrounds.json',
+        'discovery.json',
         'table_font_colors.json'
     ])
     sa = SpreadsheetApp(http=http_mocks)
